@@ -48,6 +48,7 @@
                         <tr>
                             <th scope="col">No.</th>
                             <th scope="col">Task</th>
+                            <th scope="col">Status</th>
                             <th scope="col">Options</th>
                         </tr>
                     </thead>
@@ -57,10 +58,24 @@
                             <td> {{ $task -> id }}</td>
                             <td> {{ $task -> task }}</td>
                             <td>
+                                @if ($task->status == 0)
+                                    Pending
+                                @elseif ($task->status == 1)
+                                    Done
+                                @else
+                                    {{ $task->status }} {{-- Show the original value --}}
+                                @endif
+                            </td>
+                            <td>
                                 <form action="{{ route('task.destroy', $task -> id) }}" method="post">
                                     @csrf
                                     @method('DELETE')
                                     <input class="btn btn-danger" type="submit" value="X">
+                                </form>
+                                <form action="{{ route('task.update_status', ['id' => $task->id, 'status' => $task->status]) }}" method="post">
+                                    @csrf
+                                    @method('PUT')
+                                    <input class="btn btn-success" type="submit" value="✔">
                                 </form>
                             </td>
                         </tr>

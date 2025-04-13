@@ -69,4 +69,19 @@ class TaskController extends Controller
         $task -> delete();
         return redirect('/');
     }
+
+    public function update_status($id,$status )
+    {
+        $task = Task::findOrFail($id);
+        
+        if ($task) {
+            $status = 1;
+            $task->status = $status;
+            $task->save();
+    
+            return redirect('/');
+        } else {
+            return redirect('/');
+        }
+    }
 }
