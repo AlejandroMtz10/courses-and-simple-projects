@@ -25,7 +25,7 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 rounded bg-gray-300 dark:bg-gray-700 text-black dark:text-white transition"
+      className="px-4 py-2 rounded bg-white dark:bg-gray-700 text-black dark:text-white transition"
     >
       {theme === "dark" ? "light" : "dark"}
     </button>
