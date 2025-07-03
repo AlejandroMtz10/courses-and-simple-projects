@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from '../ThemeToggle';
 
 function Navbar() {
     return (
@@ -10,6 +11,9 @@ function Navbar() {
                     <Link to="/videogames" className="text-white hover:text-yellow-400">Videojuegos</Link>
                     <Link to="/consoles" className="text-white hover:text-yellow-400">Consolas</Link>
                     <Link to="/clasifications" className="text-white hover:text-yellow-400">Clasificaciones ESRB</Link>
+                </div>
+                <div>
+                    <ThemeToggle />
                 </div>
             </div>
         </nav>
