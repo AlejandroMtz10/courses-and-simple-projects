@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { BsMoonStarsFill } from "react-icons/bs"; // Moon icon for dark mode
+import { RxSun } from "react-icons/rx";         // Sun icon for light mode
 
 function ThemeToggle() {
   const [theme, setTheme] = useState(() => {
-    // Detecta tema al cargar la página
+    // Detect the initial theme based on localStorage or system preference
     if (localStorage.theme) return localStorage.theme;
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) return "dark";
     return "light";
@@ -10,24 +12,25 @@ function ThemeToggle() {
 
   useEffect(() => {
     const root = document.documentElement;
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
-    }
+    root.setAttribute('data-theme', theme);
     localStorage.theme = theme;
   }, [theme]);
 
   const toggleTheme = () => {
+    // Update the theme state 
     setTheme(prev => (prev === "dark" ? "light" : "dark"));
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className="px-4 py-2 rounded bg-white dark:bg-gray-700 text-black dark:text-white transition"
+      className="px-3 py-3 rounded-4xl transition"
+      style={{
+        backgroundColor: 'var(--current-bg)',
+        color: 'var(--current-text)'
+      }}
     >
-      {theme === "dark" ? "light" : "dark"}
+      {theme === "dark" ? <RxSun size={20} /> : <BsMoonStarsFill size={20} />}
     </button>
   );
 }

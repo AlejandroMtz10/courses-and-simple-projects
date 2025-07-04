@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+@theme {
+    --color-bg-light: #fff;
+    --color-text-light: var(--color-gray-950);
+    --color-bg-dark: var(--color-gray-800);
+    --color-text-dark: #fff;
+}
+
+/* Define las variables por defecto (claro) */
+:root {
+    --current-bg: var(--color-bg-light);
+    --current-text: var(--color-text-light);
+}
+
+/* Cambia las variables cuando data-theme="dark" está activo */
+:root[data-theme="dark"] {
+    --current-bg: var(--color-bg-dark);
+    --current-text: var(--color-text-dark);
+}
+
+/* Aplica esto globalmente o en elementos específicos */
+body {
+    background-color: var(--current-bg);
+    color: var(--current-text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}

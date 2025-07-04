@@ -6,7 +6,7 @@ import './layout.css'
 
 function Layout() {
     return (
-        <div className="min-h-screen flex flex-col justify-between bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 transition-colors duration-300">
+        <div className="min-h-screen flex flex-col justify-between bg-primary dark:bg-primary-dark transition-colors duration-300">
             <Navbar />
             <main className="grow p-4">
                 <Outlet />
