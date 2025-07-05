@@ -1,22 +1,58 @@
 @import "tailwindcss";
 
 @theme {
-    --color-bg-light: #fff;
-    --color-text-light: var(--color-gray-950);
-    --color-bg-dark: var(--color-gray-800);
-    --color-text-dark: #fff;
+    --c-white: #ffffff;
+    --c-gray-100: #f3f4f6;
+    --c-gray-200: #e5e7eb;
+    --c-gray-400: #9ca3af;
+    --c-gray-600: #4b5563;
+    --c-gray-700: #374151;
+    --c-gray-800: #1f2937;
+    --c-gray-950: #030712;
+    --c-sky-950: #082f49; /* This is an example, check the actual value of sky-950 in Tailwind */
+    --c-neutral-950: #0a0a0a; /* This is an example, check the actual value of neutral-950 in Tailwind */
+
+    /* Now use these variables (with the --c- prefix) for your theme variables */
+    --color-bg-light: var(--c-white);
+    --color-text-light: var(--c-gray-950);
+    --color-bg-dark: var(--c-gray-800);
+    --color-text-dark: var(--c-white);
+
+    --table-bg-light: var(--c-gray-800);
+    --table-bg-dark: var(--c-gray-200);
+    --table-header-bg-light: var(--c-gray-950);
+    --table-header-bg-dark: var(--c-sky-950);
+    --table-border-light: var(--c-neutral-950);
+    --table-border-dark: var(--c-white);
+    --table-row-hover-bg-light: var(--c-gray-600);
+    --table-row-hover-bg-dark: var(--c-gray-400);
+    --table-text-light: var(--c-gray-100); /* This color may not make sense as "text-light" if you want light text */
+                                           /* If you want bright text in light mode, use --c-white or a lighter gray */
+    --table-text-dark: var(--c-white);
 }
 
-/* Variables for light theme */
+/* Default variables (light theme) */
 :root {
     --current-bg: var(--color-bg-light);
     --current-text: var(--color-text-light);
+
+    --table-bg-color: var(--table-bg-light);
+    --table-header-bg-color: var(--table-header-bg-light);
+    --table-border-color: var(--table-border-light);
+    --table-row-hover-bg-color: var(--table-row-hover-bg-light);
+    --table-text-color: var(--table-text-light);
 }
 
-/* Variables change to dark mode */
+/* Dark mode variables (applied when data-theme="dark") */
 :root[data-theme="dark"] {
     --current-bg: var(--color-bg-dark);
     --current-text: var(--color-text-dark);
+
+    --table-bg-color: var(--table-bg-dark);
+    --table-header-bg-color: var(--table-header-bg-dark);
+    --table-border-color: var(--table-border-dark);
+    --table-row-hover-bg-color: var(--table-row-hover-bg-dark);
+    --table-text-color: var(--table-text-dark);
 }
 
 /* Apply global styles */
