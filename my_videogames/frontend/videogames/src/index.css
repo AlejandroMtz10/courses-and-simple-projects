@@ -7,19 +7,19 @@
     --color-text-dark: #fff;
 }
 
-/* Define las variables por defecto (claro) */
+/* Variables for light theme */
 :root {
     --current-bg: var(--color-bg-light);
     --current-text: var(--color-text-light);
 }
 
-/* Cambia las variables cuando data-theme="dark" está activo */
+/* Variables change to dark mode */
 :root[data-theme="dark"] {
     --current-bg: var(--color-bg-dark);
     --current-text: var(--color-text-dark);
 }
 
-/* Aplica esto globalmente o en elementos específicos */
+/* Apply global styles */
 body {
     background-color: var(--current-bg);
     color: var(--current-text);
