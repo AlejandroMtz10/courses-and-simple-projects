@@ -1,6 +1,7 @@
 package com.example.videogames.controllers;
 
 import com.example.videogames.models.videogamesModel;
+import com.example.videogames.dtos.VideogamesDTO;
 import com.example.videogames.services.videogamesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,12 @@ public class videogamesController {
     public List<videogamesModel> getAllVideogames() {
         return videgameService.getAllVideogames();
     }
+
+    @GetMapping("/videogames/details")
+    public List<VideogamesDTO> getAllVideogamesDetails() {
+        return videgameService.getAllVideogamesDTOs();
+    }
+
 
     @GetMapping(value = "videogame/{id}", headers = "Accept=application/json")
     public ResponseEntity<videogamesModel> getvideogamesById(@PathVariable Long id) {

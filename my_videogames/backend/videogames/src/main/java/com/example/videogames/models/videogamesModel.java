@@ -29,4 +29,13 @@ public class videogamesModel {
     @Column(name = "game_completed")
     private boolean game_completed;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_console", insertable = false, updatable = false)
+    private consolesModel console;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_clasification", insertable = false, updatable = false)
+    private clasifications_esrbModel clasification;
+
+
 }
