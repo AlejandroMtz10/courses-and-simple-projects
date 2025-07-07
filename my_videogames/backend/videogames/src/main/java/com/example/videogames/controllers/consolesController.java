@@ -16,7 +16,7 @@ public class consolesController {
     private consolesService consolesService;
 
     @GetMapping(value = "consoles", headers = "Accept=application/json")
-    public List<consolesModel> getAllconsoless() {
+    public List<consolesModel> getAllconsoles() {
         return consolesService.getAllconsoles();
     }
 
