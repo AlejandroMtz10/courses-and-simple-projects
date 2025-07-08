@@ -1,48 +1,176 @@
-function TableGames({ videogames }) {
+import React, { useState, useEffect } from "react"; // <-- ¡Añade useState y useEffect aquí!
+import axios from "axios";
+
+// Este componente TableGames ahora espera la lista completa de videojuegos como prop
+// y también funciones para editar/eliminar (que no están implementadas aquí, pero es buena práctica pasarlas)
+function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'videogames'
+
+    // Estado para los valores de los filtros
+    const [selectedConsole, setSelectedConsole] = useState("");
+    const [selectedEsrb, setSelectedEsrb] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
+
+    // Estado para las listas de consolas y clasificaciones ESRB para los dropdowns
+    const [consoles, setConsoles] = useState([]);
+    const [clasifications, setClasifications] = useState([]);
+
+    // 1. Cargar las listas de consolas y clasificaciones al montar el componente
+    useEffect(() => {
+        const fetchFilterOptions = async () => {
+            try {
+                const [consolesRes, clasificationsRes] = await Promise.all([
+                    axios.get("http://localhost:8080/api/consoles/consoles"),
+                    axios.get("http://localhost:8080/api/ESRB/clasifications")
+                ]);
+                setConsoles(consolesRes.data);
+                setClasifications(clasificationsRes.data);
+            } catch (error) {
+                console.error("Error fetching filter options:", error);
+            }
+        };
+        fetchFilterOptions();
+    }, []); // Se ejecuta solo una vez al montar
+
+    // 2. Lógica de filtrado
+    // Usa la prop 'videogames' directamente
+    const filteredVideogames = videogames.filter(game => {
+        // Filtrar por consola
+        // console.log("Game consoleName:", game.consoleName, "Selected console:", selectedConsole); // Para debug
+        if (selectedConsole && game.consoleName !== selectedConsole) {
+            return false;
+        }
+
+        // Filtrar por ESRB
+        // console.log("Game clasificationName:", game.clasificationName, "Selected ESRB:", selectedEsrb); // Para debug
+        if (selectedEsrb && game.esrbClasification !== selectedEsrb) {
+            return false;
+        }
+
+        // Filtrar por nombre de juego (búsqueda insensible a mayúsculas/minúsculas)
+        // console.log("Game videogame:", game.videogame, "Search term:", searchTerm); // Para debug
+        if (searchTerm) {
+            return game.videogame.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+
+        return true; // Si no hay filtros aplicados o pasa todos los filtros
+    });
+
     return (
         <div className="p-2">
             <div className="container mx-auto">
-                <table className="table-auto border-double border-table-border w-auto mx-auto">
-                    <thead className="bg-sky-700">
-                        <tr className="bg-table-header-bg text-xl text-center">
-                            <th className="px-4 py-2 border border-table-border">Folio</th>
-                            <th className="px-4 py-2 border border-table-border">Game</th>
-                            <th className="px-4 py-2 border border-table-border">Console</th>
-                            <th className="px-4 py-2 border border-table-border">ESRB</th>
-                            <th className="px-4 py-2 border border-table-border">Price</th>
-                            <th className="px-4 py-2 border border-table-border">History</th>
-                            <th className="px-4 py-2 border border-table-border">100%</th>
-                            <th className="px-4 py-2 border border-table-border">Options</th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-blue-600">
-                        {videogames.map((game) => (
-                            <tr key={game.id} className="hover:bg-blue-400 text-lg">
-                                <td className="px-4 py-2 border border-table-border text-center">{game.id}</td>
-                                <td className="px-4 py-2 border border-table-border text-center">{game.videogame}</td>
-                                <td className="px-4 py-2 border border-table-border text-center">{game.consoleName}</td>
-                                <td className="px-4 py-2 border border-table-border text-center">{game.esrbSymbol} - {game.esrbClasification}</td>
-                                <td className="px-4 py-2 border border-table-border text-center">
-                                    {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
-                                </td>
-                                <td className="px-4 py-2 border border-table-border text-center">{game.historyCompleted} %</td>
-                                <td className="px-4 py-2 border border-table-border text-center">
-                                    {game.gameCompleted ? "✔️" : "❌"}
-                                </td>
-                                <td className="px-4 py-2 border border-table-border text-center ">
-                                    <div className="gap-2 flex justify-center">
-                                        <button className="bg-amber-400 hover:bg-amber-300 text-white hover:text-black font-bold py-1 px-3 rounded">
-                                            Edit
-                                        </button>
-                                        <button className="bg-red-500 hover:bg-red-700 text-white hover:text-black font-bold py-1 px-3 rounded">
-                                            Delete
-                                        </button>
-                                    </div>
-                                </td>
+                {/* Contenedor de filtros */}
+                <div className="mb-4 p-4 bg-gray-950 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center justify-between text-white">
+                    {/* Filtro por Consola */}
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <label htmlFor="console-filter" className="mb-1 text-sm font-medium">Filter by Console:</label>
+                        <select
+                            id="console-filter"
+                            className="p-2 border rounded-md bg-gray-700 text-white focus:ring-blue-500 focus:border-blue-500"
+                            value={selectedConsole}
+                            onChange={(e) => setSelectedConsole(e.target.value)}
+                        >
+                            <option value="">All Consoles</option>
+                            {/* Asegúrate de que 'c.console' exista en tus datos de consola */}
+                            {consoles.map(c => (
+                                <option key={c.id_console} value={c.console}>
+                                    {c.console}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Filtro por ESRB */}
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <label htmlFor="esrb-filter" className="mb-1 text-sm font-medium">Filter by ESRB:</label>
+                        <select
+                            id="esrb-filter"
+                            className="p-2 border rounded-md bg-gray-700 text-white focus:ring-blue-500 focus:border-blue-500"
+                            value={selectedEsrb}
+                            onChange={(e) => setSelectedEsrb(e.target.value)}
+                        >
+                            <option value="">ESRB</option>
+                            {/* Asegúrate de que 'c.clasification' exista en tus datos de clasificación */}
+                            {clasifications.map(c => (
+                                <option key={c.id_clasification} value={c.clasification}>
+                                    {c.symbol} - {c.clasification}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Búsqueda por Nombre de Juego */}
+                    <div className="flex flex-col w-full md:w-1/3">
+                        <label htmlFor="game-search" className="mb-1 text-sm font-medium">Search by Game Name:</label>
+                        <input
+                            id="game-search"
+                            type="text"
+                            placeholder="Enter game name..."
+                            className="p-2 border rounded-md bg-gray-700 text-white focus:ring-blue-500 focus:border-blue-500"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* Tabla de juegos */}
+                <div className="overflow-x-auto"> {/* Added this to help with smaller screens */}
+                    <table className="min-w-full table-auto border-double border-table-border text-table-text"> {/* Removed w-auto mx-auto and added min-w-full */}
+                        <thead className="bg-table-header-bg bg-blue-600"> {/* Changed bg-sky-700 to use theme variable */}
+                            <tr className="text-xl text-center">
+                                <th className="px-4 py-2 border border-table-border">Folio</th>
+                                <th className="px-4 py-2 border border-table-border">Game</th>
+                                <th className="px-4 py-2 border border-table-border">Console</th>
+                                <th className="px-4 py-2 border border-table-border">ESRB</th>
+                                <th className="px-4 py-2 border border-table-border">Price</th>
+                                <th className="px-4 py-2 border border-table-border">History</th>
+                                <th className="px-4 py-2 border border-table-border">100%</th>
+                                <th className="px-4 py-2 border border-table-border">Options</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-table-bg bg-blue-400"> {/* Changed bg-blue-600 to use theme variable */}
+                            {filteredVideogames.length > 0 ? (
+                                filteredVideogames.map((game) => (
+                                    <tr key={game.idVideogame} className="hover:bg-table-row-hover-bg text-lg"> {/* Changed key to idVideogame and hover class to theme variable */}
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.id}</td> {/* Changed id to idVideogame */}
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.videogame}</td>
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.consoleName}</td>
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.esrbSymbol} - {game.esrbClasification}</td> {/* Corrected property names */}
+                                        <td className="px-4 py-2 border border-table-border text-center">
+                                            {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
+                                        </td>
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.historyCompleted} %</td>
+                                        <td className="px-4 py-2 border border-table-border text-center">
+                                            {game.gameCompleted ? "✔️" : "❌"}
+                                        </td>
+                                        <td className="px-4 py-2 border border-table-border text-center ">
+                                            <div className="gap-2 flex justify-center">
+                                                {/* Botones de opciones (Ejemplo, puedes pasar onEdit/onDelete como props) */}
+                                                <button
+                                                    onClick={() => onEdit(game)} // Pasa el juego para editar
+                                                    className="bg-amber-400 hover:bg-amber-300 text-white hover:text-black font-bold py-1 px-3 rounded"
+                                                >
+                                                    Edit
+                                                </button>
+                                                <button
+                                                    onClick={() => onDelete(game.idVideogame)} // Pasa el ID para eliminar
+                                                    className="bg-red-500 hover:bg-red-700 text-white hover:text-black font-bold py-1 px-3 rounded"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="8" className="px-4 py-4 text-center text-gray-500">
+                                        No videogames found matching your criteria.
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
