@@ -1,20 +1,17 @@
-import React, { useState, useEffect } from "react"; // <-- ¡Añade useState y useEffect aquí!
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-// Este componente TableGames ahora espera la lista completa de videojuegos como prop
-// y también funciones para editar/eliminar (que no están implementadas aquí, pero es buena práctica pasarlas)
-function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'videogames'
+// TableGames component receives videogames list and action handlers as props
+function TableGames({ videogames, onEdit, onDelete }) {
 
-    // Estado para los valores de los filtros
     const [selectedConsole, setSelectedConsole] = useState("");
     const [selectedEsrb, setSelectedEsrb] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Estado para las listas de consolas y clasificaciones ESRB para los dropdowns
     const [consoles, setConsoles] = useState([]);
     const [clasifications, setClasifications] = useState([]);
 
-    // 1. Cargar las listas de consolas y clasificaciones al montar el componente
+    // Load filter data (consoles and ESRB) on mount
     useEffect(() => {
         const fetchFilterOptions = async () => {
             try {
@@ -29,38 +26,22 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
             }
         };
         fetchFilterOptions();
-    }, []); // Se ejecuta solo una vez al montar
+    }, []);
 
-    // 2. Lógica de filtrado
-    // Usa la prop 'videogames' directamente
+    // Filter videogames based on selected filters and search term
     const filteredVideogames = videogames.filter(game => {
-        // Filtrar por consola
-        // console.log("Game consoleName:", game.consoleName, "Selected console:", selectedConsole); // Para debug
-        if (selectedConsole && game.consoleName !== selectedConsole) {
-            return false;
-        }
-
-        // Filtrar por ESRB
-        // console.log("Game clasificationName:", game.clasificationName, "Selected ESRB:", selectedEsrb); // Para debug
-        if (selectedEsrb && game.esrbClasification !== selectedEsrb) {
-            return false;
-        }
-
-        // Filtrar por nombre de juego (búsqueda insensible a mayúsculas/minúsculas)
-        // console.log("Game videogame:", game.videogame, "Search term:", searchTerm); // Para debug
-        if (searchTerm) {
-            return game.videogame.toLowerCase().includes(searchTerm.toLowerCase());
-        }
-
-        return true; // Si no hay filtros aplicados o pasa todos los filtros
+        if (selectedConsole && game.consoleName !== selectedConsole) return false;
+        if (selectedEsrb && game.esrbClasification !== selectedEsrb) return false;
+        if (searchTerm) return game.videogame.toLowerCase().includes(searchTerm.toLowerCase());
+        return true;
     });
 
     return (
         <div className="p-2">
             <div className="container mx-auto">
-                {/* Contenedor de filtros */}
+
+                {/* Filters */}
                 <div className="mb-4 p-4 bg-gray-950 rounded-lg shadow-lg flex flex-col md:flex-row gap-4 items-center justify-between text-white">
-                    {/* Filtro por Consola */}
                     <div className="flex flex-col w-full md:w-1/3">
                         <label htmlFor="console-filter" className="mb-1 text-sm font-medium">Filter by Console:</label>
                         <select
@@ -70,7 +51,6 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                             onChange={(e) => setSelectedConsole(e.target.value)}
                         >
                             <option value="">All Consoles</option>
-                            {/* Asegúrate de que 'c.console' exista en tus datos de consola */}
                             {consoles.map(c => (
                                 <option key={c.id_console} value={c.console}>
                                     {c.console}
@@ -79,7 +59,6 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                         </select>
                     </div>
 
-                    {/* Filtro por ESRB */}
                     <div className="flex flex-col w-full md:w-1/3">
                         <label htmlFor="esrb-filter" className="mb-1 text-sm font-medium">Filter by ESRB:</label>
                         <select
@@ -89,7 +68,6 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                             onChange={(e) => setSelectedEsrb(e.target.value)}
                         >
                             <option value="">ESRB</option>
-                            {/* Asegúrate de que 'c.clasification' exista en tus datos de clasificación */}
                             {clasifications.map(c => (
                                 <option key={c.id_clasification} value={c.clasification}>
                                     {c.symbol} - {c.clasification}
@@ -98,7 +76,6 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                         </select>
                     </div>
 
-                    {/* Búsqueda por Nombre de Juego */}
                     <div className="flex flex-col w-full md:w-1/3">
                         <label htmlFor="game-search" className="mb-1 text-sm font-medium">Search by Game Name:</label>
                         <input
@@ -112,10 +89,10 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                     </div>
                 </div>
 
-                {/* Tabla de juegos */}
-                <div className="overflow-x-auto"> {/* Added this to help with smaller screens */}
-                    <table className="min-w-full table-auto border-double border-table-border text-table-text"> {/* Removed w-auto mx-auto and added min-w-full */}
-                        <thead className="bg-table-header-bg bg-blue-600"> {/* Changed bg-sky-700 to use theme variable */}
+                {/* Table */}
+                <div className="overflow-x-auto">
+                    <table className="min-w-full table-auto border-double border-table-border text-table-text">
+                        <thead className="bg-table-header-bg bg-blue-600">
                             <tr className="text-xl text-center">
                                 <th className="px-4 py-2 border border-table-border">Folio</th>
                                 <th className="px-4 py-2 border border-table-border">Game</th>
@@ -127,14 +104,14 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                                 <th className="px-4 py-2 border border-table-border">Options</th>
                             </tr>
                         </thead>
-                        <tbody className="bg-table-bg bg-blue-400"> {/* Changed bg-blue-600 to use theme variable */}
+                        <tbody className="bg-table-bg bg-blue-400">
                             {filteredVideogames.length > 0 ? (
                                 filteredVideogames.map((game) => (
-                                    <tr key={game.idVideogame} className="hover:bg-table-row-hover-bg text-lg"> {/* Changed key to idVideogame and hover class to theme variable */}
-                                        <td className="px-4 py-2 border border-table-border text-center">{game.id}</td> {/* Changed id to idVideogame */}
+                                    <tr key={game.idVideogame} className="hover:bg-table-row-hover-bg text-lg">
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.id}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">{game.videogame}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">{game.consoleName}</td>
-                                        <td className="px-4 py-2 border border-table-border text-center">{game.esrbSymbol} - {game.esrbClasification}</td> {/* Corrected property names */}
+                                        <td className="px-4 py-2 border border-table-border text-center">{game.esrbSymbol} - {game.esrbClasification}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">
                                             {game.price === 0 ? "Free" : `$${game.price.toFixed(2)}`}
                                         </td>
@@ -142,17 +119,16 @@ function TableGames({ videogames, onEdit, onDelete }) { // <-- La prop es 'video
                                         <td className="px-4 py-2 border border-table-border text-center">
                                             {game.gameCompleted ? "✔️" : "❌"}
                                         </td>
-                                        <td className="px-4 py-2 border border-table-border text-center ">
+                                        <td className="px-4 py-2 border border-table-border text-center">
                                             <div className="gap-2 flex justify-center">
-                                                {/* Botones de opciones (Ejemplo, puedes pasar onEdit/onDelete como props) */}
                                                 <button
-                                                    onClick={() => onEdit(game)} // Pasa el juego para editar
+                                                    onClick={() => onEdit(game)}
                                                     className="bg-amber-400 hover:bg-amber-300 text-white hover:text-black font-bold py-1 px-3 rounded"
                                                 >
                                                     Edit
                                                 </button>
                                                 <button
-                                                    onClick={() => onDelete(game.idVideogame)} // Pasa el ID para eliminar
+                                                    onClick={() => onDelete(game.id)}
                                                     className="bg-red-500 hover:bg-red-700 text-white hover:text-black font-bold py-1 px-3 rounded"
                                                 >
                                                     Delete
