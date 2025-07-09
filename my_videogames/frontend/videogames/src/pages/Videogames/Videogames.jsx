@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from 'react-toastify';
 import TableGames from '../../components/TableGames';
 import FormAddGame from '../../components/FormAddGame';
+import FormEditGame from '../../components/FormEditGame';
 import ConfirmModal from '../../components/ConfirmModal';
 import { IoMdAddCircle } from "react-icons/io";
 
@@ -14,6 +15,10 @@ function Videogames() {
 
     const [isFormOpen, setIsFormOpen] = useState(false);       // Form add game modal state
     const [isConfirmOpen, setIsConfirmOpen] = useState(false); // Modal confirm delete state
+
+    const [gameToEdit, setGameToEdit] = useState(null);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+
 
 
     // Fetch videogame list from API
@@ -45,11 +50,12 @@ function Videogames() {
         );
     };
 
-    // Handle editing (feature pending)
-    const handleEditGame = (gameToEdit) => {
-        console.log("Editing game:", gameToEdit);
-        toast.info(`Edit functionality for ${gameToEdit.videogame} coming soon!`);
+    // Handle editing a game
+    const handleEditGame = (game) => {
+        setGameToEdit(game);
+        setIsEditOpen(true);
     };
+
 
     // Handle game deletion
     const handleDeleteGame = (gameId) => {
@@ -122,6 +128,14 @@ function Videogames() {
                 onClose={() => setIsFormOpen(false)}
                 onSave={handleSave}
             />
+
+            <FormEditGame
+                isOpen={isEditOpen}
+                game={gameToEdit}
+                onClose={() => setIsEditOpen(false)}
+                onUpdate={fetchVideogames}
+            />
+
 
         </div>
     );

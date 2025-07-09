@@ -35,4 +35,6 @@ public class VideogamesDTO {
     public String getConsoleName() { return consoleName; }
     public String getEsrbClasification() { return esrbClasification; }
     public String getEsrbSymbol() { return esrbSymbol; }
+
+
 }
