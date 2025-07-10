@@ -1,7 +1,8 @@
-// En FormEditGame.jsx
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { MdCancel } from "react-icons/md";
+import { CiSaveDown1 } from "react-icons/ci";
 
 function FormEditGame({ isOpen, onClose, game, onUpdate }) {
     const [form, setForm] = useState({
@@ -30,23 +31,22 @@ function FormEditGame({ isOpen, onClose, game, onUpdate }) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if (form.price < 0 || form.historyCompleted < 0 || form.historyCompleted > 100) { // <-- Usar historyCompleted
+        if (form.price < 0 || form.historyCompleted < 0 || form.historyCompleted > 100) {
             toast.error("Please enter valid values.");
             return;
         }
 
-        // Ya hiciste una buena verificación, pero la dejo por si acaso
-        if (!game || typeof game.idVideogame === 'undefined') {
-            console.error("Error: game.idVideogame is undefined. Cannot update game.");
+        if (!game || typeof game.id === 'undefined' || game.id === null) {
+            console.error("Error: game.id is undefined or null. Cannot update game.");
             toast.error("Could not find game ID. Please try again.");
             return;
         }
 
         try {
-            await axios.put(`http://localhost:8080/api/videogames/updateVideogame/${game.idVideogame}`, {
+            await axios.put(`http://localhost:8080/api/videogames/updateVideogame/${game.id}`, {
                 price: parseFloat(form.price),
-                historyCompleted: parseFloat(form.historyCompleted), 
-                gameCompleted: form.gameCompleted
+                history_completed: parseFloat(form.historyCompleted),
+                game_completed: form.gameCompleted
             });
 
             toast.success("Game updated successfully");
@@ -96,10 +96,12 @@ function FormEditGame({ isOpen, onClose, game, onUpdate }) {
                         <label>Game Completed</label>
                     </div>
                     <div className="flex justify-end gap-2">
-                        <button type="button" onClick={onClose} className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
+                        <button type="button" onClick={onClose} className="flex gap-1 font-bold content-center bg-red-500 hover:bg-red-600 px-4 py-2 rounded">
+                            <MdCancel className="text-2xl"/>
                             Cancel
                         </button>
-                        <button type="submit" className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded">
+                        <button type="submit" className="flex gap-1 font-bold content-center bg-green-500 hover:bg-green-600 px-4 py-2 rounded">
+                            <CiSaveDown1 className="text-2xl"/>
                             Save
                         </button>
                     </div>

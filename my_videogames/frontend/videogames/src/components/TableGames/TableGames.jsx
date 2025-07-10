@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FiEdit3 } from "react-icons/fi";
+import { RiDeleteBinFill } from "react-icons/ri";
 
 // TableGames component receives videogames list and action handlers as props
 function TableGames({ videogames, onEdit, onDelete }) {
@@ -107,9 +109,9 @@ function TableGames({ videogames, onEdit, onDelete }) {
                         <tbody className="bg-table-bg bg-blue-400">
                             {filteredVideogames.length > 0 ? (
                                 filteredVideogames.map((game) => (
-                                    <tr key={game.idVideogame} className="hover:bg-table-row-hover-bg text-lg">
+                                    <tr key={game.id} className="hover:bg-blue-300 text-lg">
                                         <td className="px-4 py-2 border border-table-border text-center">{game.id}</td>
-                                        <td className="px-4 py-2 border border-table-border text-center">{game.videogame}</td>
+                                        <td className="px-4 py-2 border border-table-border text-start">{game.videogame}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">{game.consoleName}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">{game.esrbSymbol} - {game.esrbClasification}</td>
                                         <td className="px-4 py-2 border border-table-border text-center">
@@ -123,14 +125,16 @@ function TableGames({ videogames, onEdit, onDelete }) {
                                             <div className="gap-2 flex justify-center">
                                                 <button
                                                     onClick={() => onEdit(game)}
-                                                    className="bg-amber-400 hover:bg-amber-300 text-white hover:text-black font-bold py-1 px-3 rounded"
+                                                    className="flex gap-2 bg-amber-400 hover:bg-amber-300 text-white hover:text-black font-bold py-1 px-3 rounded"
                                                 >
+                                                    <FiEdit3 className="text-2xl"/>
                                                     Edit
                                                 </button>
                                                 <button
                                                     onClick={() => onDelete(game.id)}
-                                                    className="bg-red-500 hover:bg-red-700 text-white hover:text-black font-bold py-1 px-3 rounded"
+                                                    className="flex gap-2 bg-red-500 hover:bg-red-700 text-white hover:text-black font-bold py-1 px-3 rounded"
                                                 >
+                                                    <RiDeleteBinFill className="text-2xl" />
                                                     Delete
                                                 </button>
                                             </div>

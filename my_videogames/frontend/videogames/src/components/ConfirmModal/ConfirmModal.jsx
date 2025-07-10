@@ -1,4 +1,7 @@
 import React from "react";
+import { MdCancel } from "react-icons/md";
+import { GiConfirmed } from "react-icons/gi";
+
 
 function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }) {
     if (!isOpen) return null;
@@ -11,14 +14,16 @@ function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }) {
                 <div className="flex justify-end gap-4">
                     <button
                         onClick={onCancel}
-                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                        className="flex content-center gap-1 font-bold bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
                     >
+                        <MdCancel className="text-xl"/>
                         No
                     </button>
                     <button
                         onClick={onConfirm}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+                        className="flex content-center gap-1 font-bold bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
                     >
+                        <GiConfirmed className="text-xl"/>
                         Yes, Delete
                     </button>
                 </div>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from 'react-toastify';
+import { MdCancel } from "react-icons/md";
+import { CiSaveDown1 } from "react-icons/ci";
 
 function FormAddGame({ isOpen, onClose, onSave }) {
     const [form, setForm] = useState({
@@ -149,10 +151,12 @@ function FormAddGame({ isOpen, onClose, onSave }) {
                     </label>
 
                     <div className="flex justify-end gap-2">
-                        <button type="button" onClick={handleCancel} className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-400">
+                        <button type="button" onClick={handleCancel} className="flex gap-1 font-bold content-center px-4 py-2 bg-red-600 text-white rounded hover:bg-red-400">
+                            <MdCancel className="text-2xl"/>
                             Cancel
                         </button>
-                        <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-400">
+                        <button type="submit" className="flex gap-1 font-bold content-center px-4 py-2 bg-green-600 text-white rounded hover:bg-green-400">
+                            <CiSaveDown1 className="text-2xl"/>
                             Save
                         </button>
                     </div>

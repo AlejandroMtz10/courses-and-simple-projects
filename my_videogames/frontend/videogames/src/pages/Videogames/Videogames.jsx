@@ -95,7 +95,7 @@ function Videogames() {
 
     return (
         <div className="container mx-auto py-6">
-            <h1 className="text-4xl font-bold text-center mb-4 text-white">Videogames</h1>
+            <h1 className="text-4xl font-bold text-center mb-4">Videogames</h1>
 
             <div className="flex justify-end mb-4">
                 <button
