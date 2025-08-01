@@ -4,16 +4,21 @@ import { toast } from 'react-toastify';
 import { IoMdAddCircle } from "react-icons/io";
 import ListConsoles from '../../components/ListConsoles';
 import FormAddConsole from '../../components/FormAddConsole';
+import EditConsoleModal from '../../components/EditConsoleModal';
+import DeleteConsole from '../../components/DeleteConsole';
 
 function Consoles() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     
-    // 1. Mover el estado de los datos al componente padre
+    // 1. Move the state variables to the Consoles component
     const [consoles, setConsoles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+    const [selectedConsole, setSelectedConsole] = useState(null);
 
-    // 2. Crear la función para cargar los datos
+    // 2. Function to fetch consoles from the API
     const fetchConsoles = async () => {
         try {
             setLoading(true);
@@ -26,16 +31,54 @@ function Consoles() {
             setLoading(false);
         }
     };
-    
-    // 3. Cargar los datos la primera vez
+    //Open modal to edit a console
+    const handleEditClick = (console) => {
+        setSelectedConsole(console);
+        setEditModalOpen(true);
+    };
+
+    // Save the edited console
+    const handleUpdateConsole = async (id, updatedData) => {
+        try {
+            await axios.put(`http://localhost:8080/api/consoles/updateConsole/${id}`, updatedData);
+            toast.success("Consola actualizada correctamente");
+            setEditModalOpen(false);
+            fetchConsoles();
+        } catch (err) {
+            toast.error("Error al actualizar consola");
+            console.error(err);
+        }
+    };
+
+
+    // 3. Upload the consoles when the component mounts
     useEffect(() => {
         fetchConsoles();
     }, []);
 
-    // Esta función se llama cuando se cierra el modal después de un registro exitoso
+    // This function will be called when the form is submitted
     const handleSave = () => {
         toast.success("Console registered successfully!");
         fetchConsoles();
+    };
+
+    // Open modal to delete a console
+    const handleDeleteClick = (console) => {
+        setSelectedConsole(console);
+        setDeleteModalOpen(true);
+    };
+
+    // Confirm deletion of a console
+    const handleConfirmDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:8080/api/consoles/deleteConsole/${id}`);
+            toast.success("Consola eliminada");
+            setDeleteModalOpen(false);
+            fetchConsoles();
+        } catch (err) {
+            toast.error("Error al eliminar consola");
+            console.error(err);
+        }
     };
 
     return (
@@ -51,10 +94,26 @@ function Consoles() {
                 </button>
             </div>
             <div>
-                <ListConsoles 
+                <ListConsoles
                     consoles={consoles}
                     loading={loading}
                     error={error}
+                    onEdit={handleEditClick}
+                    onDelete={handleDeleteClick}
+                />
+
+                <EditConsoleModal
+                    isOpen={editModalOpen}
+                    onClose={() => setEditModalOpen(false)}
+                    onSave={handleUpdateConsole}
+                    consoleToEdit={selectedConsole}
+                />
+
+                <DeleteConsole
+                    isOpen={deleteModalOpen}
+                    onClose={() => setDeleteModalOpen(false)}
+                    onConfirm={handleConfirmDelete}
+                    consoleToDelete={selectedConsole}
                 />
             </div>
 

@@ -8,6 +8,7 @@ create table clasifications_esrb(
     clasification varchar(50) not null,
     description varchar(255) not null
 );
+
 create table consoles(
 	id_console int auto_increment primary key,
     console varchar(100) not null

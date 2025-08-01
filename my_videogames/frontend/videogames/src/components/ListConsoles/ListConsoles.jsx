@@ -1,16 +1,15 @@
 import React from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-// Recibe los datos y el estado como props
-function ListConsoles({ consoles, loading, error }) {
-    // function to edit a console
+// ListConsoles component to display the list of consoles
+function ListConsoles({ consoles, loading, error, onEdit, onDelete }) {
+    // helper functions to call the passed-in handlers
     const handleEdit = (id) => {
-        alert(`Editing console with ID: ${id}`);
+        if (onEdit) onEdit(id);
     };
 
-    // function to delete a console
     const handleDelete = (id) => {
-        alert(`Deleting console with ID: ${id}`);
+        if (onDelete) onDelete(id);
     };
 
     if (loading) {
@@ -40,14 +39,14 @@ function ListConsoles({ consoles, loading, error }) {
                             </div>
                             <div className="flex space-x-2">
                                 <button
-                                    onClick={() => handleEdit(consoleItem.id_console)}
+                                    onClick={() => handleEdit(consoleItem)}
                                     className="p-2 rounded-full text-white bg-amber-500 hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-400"
                                     aria-label="Edit"
                                 >
                                     <FaEdit />
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(consoleItem.id_console)}
+                                    onClick={() => handleDelete(consoleItem)}
                                     className="p-2 rounded-full text-white bg-red-500 hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400"
                                     aria-label="Delete"
                                 >
