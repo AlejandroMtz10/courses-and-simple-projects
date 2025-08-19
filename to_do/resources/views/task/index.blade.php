@@ -17,6 +17,10 @@
             integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
             crossorigin="anonymous"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
+        >
     </head>
 
     <body>
@@ -26,14 +30,18 @@
         <main class="container">
             <br>
             <div class="card">
-                <div class="card-header">Tasks</div>
+                <div class="card-header d-flex justify-content-center">Tasks</div>
                 <div class="card-body">
                     <form action="{{ url('/') }}" method="post">
                         @csrf
                         Task: <br>
                         <input class="form-control" type="text" name="task" id="task">
                         <br>
-                        <input class="btn btn-primary" type="submit" value="New task">
+                        <div class="d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> New task
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -66,7 +74,7 @@
                                     {{ $task->status }} {{-- Show the original value --}}
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-flex justify-content-around">
                                 <form action="{{ route('task.destroy', $task -> id) }}" method="post">
                                     @csrf
                                     @method('DELETE')
