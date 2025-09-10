@@ -15,6 +15,7 @@
                 <a href="/" class="px-3 hover:underline">Inicio</a>
                 <a href="/about" class="px-3 hover:underline">Acerca de</a>
                 <a href="/contact" class="px-3 hover:underline">Contacto</a>
+                <a href="/posts" class="px-3 hover:underline">Posts</a>
             </nav>
         </div>
     </header>
