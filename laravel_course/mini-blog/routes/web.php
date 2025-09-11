@@ -2,6 +2,7 @@
 
     use Illuminate\Support\Facades\Route;
     use App\Models\Post;
+    use App\Http\Controllers\PostController;
 
     Route::get('/', function () {
         return view('welcome');
@@ -24,4 +25,6 @@
         return view('posts.index', compact('posts'));
     });
 
+    Route::resource('posts', PostController::class);
+    
 ?>
