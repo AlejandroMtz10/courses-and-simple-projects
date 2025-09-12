@@ -3,7 +3,7 @@
 @section('content')
     <h2 class="text-2xl font-bold mb-4">Crear nuevo Post</h2>
 
-    {{-- Mostrar errores de validación --}}
+    {{-- Show the errors --}}
     @if ($errors->any())
         <div class="mb-4 p-4 bg-red-100 text-red-700 rounded">
             <ul class="list-disc ml-6">

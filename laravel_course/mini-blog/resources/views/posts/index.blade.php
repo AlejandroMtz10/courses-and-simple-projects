@@ -23,7 +23,24 @@
                 <p class="text-sm text-gray-500 mt-2">
                     Autor: {{ $post->user->name }} | Publicado: {{ $post->created_at->format('d/m/Y') }}
                 </p>
+
+                <div class="flex justify-end space-x-2 mt-2">
+                    <a href="{{ route('posts.edit', $post) }}" 
+                    class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">
+                    Editar
+                    </a>
+
+                    <form action="{{ route('posts.destroy', $post) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres eliminar este post?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700">Eliminar</button>
+                    </form>
+                </div>
+                
             </div>
         @endforeach
+    </div>
+    <div class="mt-6">
+        {{ $posts->links() }}
     </div>
 @endsection
