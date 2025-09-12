@@ -1,7 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <h2 class="text-2xl font-bold mb-4">Lista de Posts</h2>
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-2xl font-bold mb-4">Lista de Posts</h2>
+
+        <a href="{{ route('posts.create') }}" 
+            class="inline-block mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+            + New post
+        </a>
+    </div>
+
 
     <div class="space-y-4">
         @foreach ($posts as $post)

@@ -3,6 +3,7 @@
 @section('content')
     <div class="p-6 bg-white shadow rounded-lg">
         <h2 class="text-3xl font-bold">{{ $post->title }}</h2>
+
         <p class="mt-2 text-gray-700">{{ $post->content }}</p>
         <p class="text-sm text-gray-500 mt-4">
             Autor: {{ $post->user->name }} | Publicado: {{ $post->created_at->format('d/m/Y H:i') }}
