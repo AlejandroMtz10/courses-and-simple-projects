@@ -1,41 +1,20 @@
 <?php
 
-    use Illuminate\Support\Facades\Route;
-    use App\Models\Post;
-    use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 
-    Route::get('/', function () {
-        return view('welcome');
-    });
+Route::get('/', function () {
+    return view('welcome');
+});
 
-    Route::get('/', function () {
-        return view('home', ['title' => 'Inicio']);
-    });
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
-    Route::get('/about', function () {
-        return view('about', ['title' => 'Acerca de']);
-    });
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
 
-    Route::get('/contact', function () {
-        return view('contact', ['title' => 'Contacto']);
-    });
-
-    Route::get('/posts', function () {
-        $posts = Post::with('user')->get(); // obtenemos posts con usuario
-        return view('posts.index', compact('posts'));
-    });
-
-    Route::resource('posts', PostController::class);
-
-    Route::get('/posts/create',[PostController::class,'create'])->name('posts.create');
-
-    Route::post('/posts',[PostController::class,'store'])->name('posts.store');
-
-    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-
-    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
-
-    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
-    
-    Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-?>
+require __DIR__.'/auth.php';
