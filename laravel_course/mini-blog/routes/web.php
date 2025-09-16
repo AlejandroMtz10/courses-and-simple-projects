@@ -2,14 +2,31 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Rutas públicas (solo invitados)
+Route::middleware('guest')->group(function () {
+    Route::get('/', function () {
+        return view('welcome'); // página de inicio
+    });
+});
+
+// Rutas protegidas (solo logueados)
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});
+
+
+Route::middleware('auth')->group(function () {
+    Route::resource('/posts', PostController::class)->middleware('auth');
+});
+
 
 Route::get('/home', function () {
     return view('home');

@@ -1,10 +1,11 @@
 <?php
-
     namespace App\Http\Controllers;
 
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
     use App\Models\Post;
+    use App\Models\User;
+    use Illuminate\Support\Facades\Auth;
 
     class PostController extends Controller
     {
@@ -37,16 +38,18 @@
          */
         public function store(Request $request)
         {
-            $validated = $request->validate([
+            $request->validate([
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
             ]);
 
-            $validated['user_id'] = 1; // assuming user is authenticated
+            Auth::user()->posts()->create([
+                'title'   => $request->title,
+                'content' => $request->content,
+            ]);
 
-            Post::create($validated);
-            
-            return redirect()->route('posts.index')->with('success', 'Post created successfully.');
+            return redirect()->route('posts.index')
+                            ->with('success', 'Post creado correctamente.');
         }
 
         /**
