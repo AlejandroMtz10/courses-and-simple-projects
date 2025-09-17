@@ -38,19 +38,16 @@
          */
         public function store(Request $request)
         {
-            $request->validate([
+            $validated = $request->validate([
                 'title' => 'required|string|max:255',
                 'content' => 'required|string',
             ]);
 
-            Auth::user()->posts()->create([
-                'title'   => $request->title,
-                'content' => $request->content,
-            ]);
+            Auth::user()->posts()->create($validated);
 
-            return redirect()->route('posts.index')
-                            ->with('success', 'Post creado correctamente.');
+            return redirect()->route('posts.index')->with('success', 'Post creado correctamente.');
         }
+
 
         /**
          * Show the form for editing the specified resource.
