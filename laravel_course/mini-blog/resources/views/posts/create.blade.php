@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container mx-auto p-4">
-        <h2 class="text-2xl font-bold mb-4">Crear nuevo Post</h2>
+        <h2 class="text-2xl font-bold mb-4">New Post</h2>
 
         {{-- Show the errors --}}
         @if ($errors->any())
@@ -18,19 +18,25 @@
         <form action="{{ route('posts.store') }}" method="POST" class="space-y-4">
             @csrf
             <div>
-                <label class="block font-semibold">Title</label>
-                <input type="text" name="title" value="{{ old('title') }}" 
-                    class="w-full border rounded p-2">
+                <label class="block font-semibold" for="title">Title</label>
+                <input type="text" name="title" value="{{ old('title') }}" class="w-full border rounded p-2">
+                @error('title')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
 
             <div>
-                <label class="block font-semibold">Content</label>
-                <textarea name="content" rows="5" class="w-full border rounded p-2">{{ old('content') }}</textarea>
+                <label class="block font-semibold" for="content">Content</label>
+                <textarea rows="5" class="w-full border rounded p-2" name="content">{{ old('content') }}</textarea>
+                @error('content')
+                    <p class="text-red-500 text-sm">{{ $message }}</p>
+                @enderror
             </div>
-
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                Save Post
-            </button>
+            <div class="flex justify-end">
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                    Save post
+                </button>
+            </div>
         </form>
     </div>
 @endsection

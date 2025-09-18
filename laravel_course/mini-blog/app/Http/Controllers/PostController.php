@@ -4,7 +4,7 @@
     use App\Http\Controllers\Controller;
     use Illuminate\Http\Request;
     use App\Models\Post;
-    use App\Models\User;
+    use App\Http\Requests\StorePostRequest;
     use Illuminate\Support\Facades\Auth;
 
     class PostController extends Controller
@@ -32,22 +32,6 @@
         {
             return view('posts.create');
         }
-
-        /**
-         * Store a newly created resource in storage.
-         */
-        public function store(Request $request)
-        {
-            $validated = $request->validate([
-                'title' => 'required|string|max:255',
-                'content' => 'required|string',
-            ]);
-
-            Auth::user()->posts()->create($validated);
-
-            return redirect()->route('posts.index')->with('success', 'Post creado correctamente.');
-        }
-
 
         /**
          * Show the form for editing the specified resource.
@@ -79,5 +63,13 @@
         {
             $post->delete();
             return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
+        }
+
+        public function store(StorePostRequest $request)
+        {
+            Auth::user()->posts()->create($request->validated());
+
+            return redirect()->route('posts.index')
+                            ->with('success', 'Post creado correctamente.');
         }
     }
