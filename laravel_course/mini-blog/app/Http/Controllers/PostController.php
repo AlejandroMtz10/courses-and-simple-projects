@@ -2,6 +2,7 @@
     namespace App\Http\Controllers;
 
     use App\Http\Controllers\Controller;
+    use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
     use Illuminate\Http\Request;
     use App\Models\Post;
     use App\Http\Requests\StorePostRequest;
@@ -9,6 +10,7 @@
 
     class PostController extends Controller
     {
+        use AuthorizesRequests;
         /**
          * Display a listing of the resource.
          */
@@ -38,7 +40,8 @@
          */
         public function edit(Post $post)
         {
-            return view('posts/edit',compact('post'));
+            $this->authorize('update', $post);
+            return view('posts.edit', compact('post'));
         }
 
         /**
@@ -61,6 +64,7 @@
          */
         public function destroy(Post $post)
         {
+            $this->authorize('delete', $post);
             $post->delete();
             return redirect()->route('posts.index')->with('success', 'Post deleted successfully.');
         }
