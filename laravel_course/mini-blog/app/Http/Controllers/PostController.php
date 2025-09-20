@@ -14,10 +14,31 @@
         /**
          * Display a listing of the resource.
          */
-        public function index()
+        public function index(Request $request)
         {
-            $posts = Post::with('user')->latest()->paginate(5);
-            return view('posts.index', compact('posts'));
+                $query = Post::with('user');
+
+                // 🔍 Filtro por título
+                if ($request->filled('title')) {
+                    $query->where('title', 'like', '%' . $request->title . '%');
+                }
+
+                // 🔍 Filtro por usuario (creador)
+                if ($request->filled('user_id')) {
+                    $query->where('user_id', $request->user_id);
+                }
+
+                // 🔍 Filtro por fecha (ej. creada el día exacto)
+                if ($request->filled('date')) {
+                    $query->whereDate('created_at', $request->date);
+                }
+
+                $posts = $query->latest()->paginate(5);
+
+                // Lista de usuarios para el filtro
+                $users = \App\Models\User::select('id','name')->get();
+
+                return view('posts.index', compact('posts', 'users'));
         }
 
         //Details of a post
@@ -74,6 +95,6 @@
             Auth::user()->posts()->create($request->validated());
 
             return redirect()->route('posts.index')
-                            ->with('success', 'Post creado correctamente.');
+                            ->with('success', 'Post created!.');
         }
     }
