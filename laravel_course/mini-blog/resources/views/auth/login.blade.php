@@ -3,7 +3,11 @@
 @section('content')
     <div class="container mx-auto p-4">
         <div class="container mx-auto p-4 max-w-md bg-white rounded-lg shadow-md">
-            <div class="text-center mb-6">
+            <div class="flex justify-center pb-2">
+                <img src="{{ asset('images/small_logo.webp') }}" alt="Logo Alejandro Developer" class="w-40 h-auto">
+            </div>
+            <hr class="my-2 border-gray-200 sm:mx-auto lg:my-2">
+            <div class="text-center mb-6 pt-2">
                 <h1 class="text-3xl font-bold text-indigo-600">Inicia sesión en tu Blog</h1>
                 <p class="text-gray-500">Publica y comparte tus ideas con el mundo 🌍</p>
             </div>

@@ -14,36 +14,35 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans antialiased flex flex-col min-h-screen bg-gray-100">
+    @include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @hasSection('header')
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        @yield('header')
-                    </div>
-                </header>
-            @endif
+    @hasSection('header')
+        <header class="bg-white shadow">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                @yield('header')
+            </div>
+        </header>
+    @endif
 
-            @if(session('success'))
-                <div class="mb-4 p-3 rounded bg-green-100 text-green-700">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="mb-4 p-3 rounded bg-red-100 text-red-700">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-
-            <!-- Page Content -->
-            <main>
-                @yield('content')
-            </main>
+    @if(session('success'))
+        <div class="mb-4 p-3 rounded bg-green-100 text-green-700">
+            {{ session('success') }}
         </div>
-    </body>
+    @endif
+
+    @if(session('error'))
+        <div class="mb-4 p-3 rounded bg-red-100 text-red-700">
+            {{ session('error') }}
+        </div>
+    @endif
+
+    <main class="flex-grow">
+        @yield('content')
+    </main>
+
+    <footer>
+        @include('layouts.footer')
+    </footer>
+</body>
 </html>

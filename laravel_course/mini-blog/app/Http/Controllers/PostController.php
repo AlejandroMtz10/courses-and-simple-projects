@@ -18,17 +18,17 @@
         {
                 $query = Post::with('user');
 
-                // 🔍 Filtro por título
+                // Filtro por título
                 if ($request->filled('title')) {
                     $query->where('title', 'like', '%' . $request->title . '%');
                 }
 
-                // 🔍 Filtro por usuario (creador)
+                // Filtro por usuario (creador)
                 if ($request->filled('user_id')) {
                     $query->where('user_id', $request->user_id);
                 }
 
-                // 🔍 Filtro por fecha (ej. creada el día exacto)
+                // Filtro por fecha (ej. creada el día exacto)
                 if ($request->filled('date')) {
                     $query->whereDate('created_at', $request->date);
                 }
