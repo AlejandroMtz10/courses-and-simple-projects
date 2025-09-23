@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -19,4 +20,7 @@ Route::get('/tasks', function () {
         ['id' => 2, 'title' => 'Practicar con Postman'],
     ]);
 });
+
+//Rout to TaskController
+Route::apiResource('tasks', TaskController::class);
 
