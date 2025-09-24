@@ -4,50 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskResource;
 
 class TaskController extends Controller
 {
-    // GET /api/tasks
     public function index()
     {
-        return response()->json(Task::all(), 200);
+        return TaskResource::collection(Task::all());
     }
 
-    // POST /api/tasks
+    public function show($id)
+    {
+        $task = Task::findOrFail($id);
+        return new TaskResource($task);
+    }
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-        ]);
-
-        $task = Task::create($validated);
-
-        return response()->json($task, 201);
+        $task = Task::create($request->only('title', 'do_it'));
+        return new TaskResource($task);
     }
 
-    // GET /api/tasks/{id}
-    public function show(Task $task)
+    public function update(Request $request, $id)
     {
-        return response()->json($task, 200);
+        $task = Task::findOrFail($id);
+
+        $data = $request->all();
+
+        // mapear done -> do_it
+        if (isset($data['done'])) {
+            $data['do_it'] = $data['done'];
+            unset($data['done']);
+        }
+
+        $task->update($data);
+
+        return new TaskResource($task);
     }
 
-    // PUT /api/tasks/{id}
-    public function update(Request $request, Task $task)
+    public function destroy($id)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-        ]);
-
-        $task->update($validated);
-
-        return response()->json($task, 200);
-    }
-
-    // DELETE /api/tasks/{id}
-    public function destroy(Task $task)
-    {
+        $task = Task::findOrFail($id);
         $task->delete();
-
-        return response()->json(['message' => 'Task deleted'], 200);
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 }
