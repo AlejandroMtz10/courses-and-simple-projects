@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
+use App\Http\Requests\StoreTaskRequest;
 
 class TaskController extends Controller
 {
@@ -19,10 +20,11 @@ class TaskController extends Controller
         return new TaskResource($task);
     }
 
-    public function store(Request $request)
+    public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->only('title', 'do_it'));
-        return new TaskResource($task);
+        $task = Task::create($request->validated());
+
+        return response()->json($task, 201);
     }
 
     public function update(Request $request, $id)
