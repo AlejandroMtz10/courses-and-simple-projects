@@ -6,6 +6,7 @@ use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Auth\Access\AuthorizationException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -49,6 +50,15 @@ class Handler extends ExceptionHandler
                     'message' => 'Unauthorized.',
                 ], 401);
             }
+
+            if ($request->expectsJson()) {
+                if ($e instanceof AuthorizationException) {
+                    return response()->json([
+                        'message' => 'You are not authorized to perform this action.'
+                    ], 403);
+                }
+            }
+
 
             // Default → 500
             return response()->json([

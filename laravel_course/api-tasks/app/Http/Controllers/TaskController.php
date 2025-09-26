@@ -6,9 +6,11 @@ use App\Models\Task;
 use Illuminate\Http\Request;
 use App\Http\Resources\TaskResource;
 use App\Http\Requests\StoreTaskRequest;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class TaskController extends Controller
 {
+    use AuthorizesRequests;
     public function index()
     {
         return TaskResource::collection(Task::all());
@@ -22,32 +24,28 @@ class TaskController extends Controller
 
     public function store(StoreTaskRequest $request)
     {
-        $task = Task::create($request->validated());
+        $task = $request->user()->tasks()->create($request->validated());
 
         return response()->json($task, 201);
     }
 
-    public function update(Request $request, $id)
+
+    public function update(Request $request, Task $task)
     {
-        $task = Task::findOrFail($id);
+        $this->authorize('update', $task);
 
-        $data = $request->all();
+        $task->update($request->all());
 
-        // mapear done -> do_it
-        if (isset($data['done'])) {
-            $data['do_it'] = $data['done'];
-            unset($data['done']);
-        }
-
-        $task->update($data);
-
-        return new TaskResource($task);
+        return response()->json($task);
     }
 
-    public function destroy($id)
+    public function destroy(Task $task)
     {
-        $task = Task::findOrFail($id);
+        $this->authorize('delete', $task);
+
         $task->delete();
+
         return response()->json(['message' => 'Task deleted successfully']);
     }
+
 }
